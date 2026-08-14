@@ -1,0 +1,140 @@
+---
+title: Create a Davia scenario with AI
+description: Lead the brainstorming, validate the scenario, then prepare its final file.
+---
+
+This page contains instructions for the AI. Follow them directly: do not
+summarize the documentation or ask the user what they want to do with it.
+
+You must help the user design a Davia scenario, then produce a single final
+file that follows the contract. The deliverable is one downloadable `.json`
+file whose entire contents are the JSON object defined by the contract. It is
+never a Markdown (`.md`) document, a plain-text (`.txt`) document, or JSON that
+describes a document with keys such as `title`, `preamble`, or `sections`.
+When speaking with the user, simply call it **the scenario's final file**.
+[Davia](https://davia.ai/) is the website for the product in question.
+
+The examples in this documentation illustrate structure and reasoning. Never
+reuse their names, values, or elements unless they match the user's scenario
+and map.
+
+The user must provide:
+
+- their starting idea, however brief;
+- a description of the extent of the existing map;
+- the map's cell data, copied exactly from the website. The user does not need
+  to understand or modify it.
+
+The map is an input. Do not redraw its extent, create new cells, or copy its
+geometry into the result.
+
+## Understand the provided map data
+
+The prompt contains one map-context object followed by one compact JSON line per
+cell. The board gives the current scenario name and map metadata. Each cell may
+contain `cell_id`, `slug`, `name`, `kind`, `description`, `bbox`,
+`center`, and `neighbors`.
+
+Use all of this as read-only context. Build a lookup from the exact `cell_id`
+field on each JSON line before assigning any feature. The `cell_id` is never a
+number inferred from the cell's `slug`, name, order, `center`, or `bbox`. For
+example, if a source line contains `{"cell_id":118,"slug":"germany-124"}`,
+the only valid reference to that cell is `118`, never `124`.
+
+In the final file, reference cells only with those exact source `cell_id`
+values. Never copy the board object, slugs, bounds, centers, neighbors, or cell
+descriptions into the final file. Give every landmark its own
+`[longitude, latitude]` coordinates. For a known real place, use its actual
+geographic position. For a fictional place, choose a deliberate point
+consistent with the scenario. This is a positioning requirement, not a demand
+for historical realism. Never use the cell's `center` or `bbox`, and never
+reuse one generic point for several places. A missing or generic landmark
+position makes the final file invalid and Davia rejects it.
+
+## Non-negotiable output gate
+
+The final JSON has exactly these six root keys: `story`, `story_stats`,
+`world_stats`, `cell_values`, `entities`, and `landmarks`. Before delivering
+the file, inspect every landmark object. Each one must have exactly this shape:
+
+```json
+{
+  "name": "<landmark name>",
+  "cell_id": 123,
+  "coordinates": [-43.1729, -22.9068],
+  "stat_defs": {},
+  "assets": { "mapAssetKey": "poi:settlement" }
+}
+```
+
+`coordinates` is required for every landmark, without exception. Missing
+coordinates is a blocking error, not a warning. There is no cell-center
+fallback in the final-file contract. Do not create a landmark unless you can
+provide its deliberate position inside the declared cell.
+
+Before delivery, compare every entity and landmark against the source cell
+lookup. Copy `cell_id` from the exact field, never from a numeric slug suffix.
+When an entity has a knowable or deliberately authored starting point, include
+its own coordinates too. People use their actual location at `start_date`;
+armies, fleets, and groups use their headquarters, base, or concentration
+point. Do not leave an entire entity list at generic cell positions.
+
+Run a map-wide coverage pass for landmarks. Spread meaningful places across
+the inhabited and scenario-relevant extent before adding extra density to the
+core action. No large relevant landmass or macroregion may remain empty merely
+because another region contains most of the action. Do not fill gaps with
+arbitrary points: use important cities, ports, hubs, chokepoints, or deliberate
+fictional places that belong in the scenario.
+
+Hard collection limits: at most 30 `story_stats`, between 1 and 100 `entities`,
+and between 0 and 100 `landmarks`. Across `story_stats`, no more than 10
+definitions may apply to `playthrough`, 3 to `cell`, 10 to `entity`, and 4 to
+`poi`. A definition that applies to several subject types counts toward every
+corresponding limit.
+
+## Step 1 — Lead the brainstorming
+
+Read [the brainstorming rules](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/brainstorming.md) in full, then
+begin the interview. Ask only the questions that remain necessary and proceed
+one topic at a time.
+
+If the user explicitly asks you to make every necessary decision, ask no
+questions, and return a complete final file immediately, follow that request as
+the direct-generation exception described in the brainstorming rules. Do not
+stop for a separate brief validation. Make the missing decisions, treat the
+resulting scenario as validated, and continue to Step 2 in the same response.
+This exception never waives the exact-placement or map-coverage checks above.
+
+Once you have enough information, present the scenario brief to the user and
+explicitly ask them to validate it. Until they do, remain in this step and
+revise the brief with them.
+
+## Step 2 — Build the final file
+
+After the user explicitly validates the brainstorming, tell them:
+
+> The scenario is validated. I will now prepare the final file.
+
+Then read the following pages in full, in this exact order:
+
+1. [Final JSON contract](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/json-contract.md)
+2. [Populate `story`](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-story.md)
+3. [Define and populate statistics](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-statistics.md)
+4. [Populate entities](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-entities.md)
+5. [Populate landmarks](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-landmarks.md)
+6. [Populate values for the existing map](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-map.md)
+7. [Assign 3D assets](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-map-assets.md)
+8. [3D asset catalog](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/map-assets-catalog.md)
+9. [Validate and produce the final JSON](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/validate-and-output.md)
+
+Populate a single JSON object in memory according to these pages. Do not show
+any fragment, draft, or intermediate document. After completing the mechanical
+validation required by the last page, give the user one downloadable `.json`
+file. Only when attachments are unavailable may you provide one complete JSON
+block to copy. Never deliver a Markdown or plain-text document.
+
+## Optional step — Generate images
+
+This step is not part of the final file. Only perform it if the user later asks
+for images. Then read [Generate images](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/generate-images.md) and
+apply its single visual style without changing the validated scenario.
