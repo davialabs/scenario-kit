@@ -11,23 +11,25 @@ Each entry in `entities` contains:
 
 - `name`: a unique, concrete name;
 - `description`: identity, initial situation, and useful distinguishing details;
-- `cell_id`: an existing cell copied from the provided map;
-- `coordinates`: an optional `[longitude, latitude]` position;
+- `coordinates`: the preferred `[longitude, latitude]` position;
+- `cell_id`: a fallback existing cell used only without coordinates;
 - `is_featured`: prominence in the interface, with no effect on playability;
 - `stat_defs`: applicable initial values;
 - `assets.mapAssetKey`: the exact key assigned during the asset step.
 
 Do not add any other field.
 
-Copy `cell_id` only from the exact `cell_id` field of the selected source-cell
-line. Ignore every number embedded in its `slug`. A cell described by
-`{"cell_id":118,"slug":"germany-124"}` must be referenced as `118`.
+Provide either `coordinates` or `cell_id`. When both are present, coordinates
+are authoritative. Copy a fallback `cell_id` only from the exact `cell_id`
+field of the selected source-cell line. Ignore every number embedded in its
+`slug`. A cell described by `{"cell_id":118,"slug":"germany-124"}` has the
+fallback `118`.
 
 ## Presence on the map
 
-Every entity must be physically present in its `cell_id` at
-`story.start_date`. Remove actors outside the map. Do not retain them with a
-fictional position or nearby cell.
+Every entity must be physically present on the map at `story.start_date`.
+Remove actors outside the map. Do not retain them with a fictional position or
+nearby fallback cell.
 
 Coordinates are technically optional, but a complete one-shot result should
 provide them whenever the starting position is knowable or can be authored
@@ -38,10 +40,10 @@ every actor at a capital or generic cell position merely because they share a
 country.
 
 Omit `coordinates` only when cell-level uncertainty is intentional and no
-precise starting point can be justified. When coordinates are present, use
-`[longitude, latitude]`, keep the real or authored point authoritative, and
-select the exact source `cell_id` that contains that point. Never substitute
-the cell's `center` or the center of its `bbox`.
+precise starting point can be justified. In that case, provide the exact source
+`cell_id` as a fallback. When coordinates are present, use
+`[longitude, latitude]` and omit `cell_id`; Davia derives the containing cell.
+Never substitute the cell's `center` or the center of its `bbox`.
 
 Example — Brazil: Deodoro da Fonseca may be included if he is in Rio de Janeiro
 at the start and that city is on the map. A diplomat stationed in London at

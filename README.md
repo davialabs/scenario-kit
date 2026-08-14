@@ -14,9 +14,9 @@ The files in [`scenario-docs/`](scenario-docs/) form one coherent contract.
 The assistant starts with `scenario-docs/README.md` and follows the linked pages
 in their specified order.
 
-English is the default language and lives directly in `scenario-docs/`. Future
-translations can live in locale folders such as `scenario-docs/fr/` while
-keeping the same filenames and links.
+English is the canonical language and lives directly in `scenario-docs/`.
+The calling prompt tells the assistant which language to use with the creator;
+the JSON field names and contract identifiers remain unchanged.
 
 The repository may later add examples, validation packages, and contract tests
 without mixing them into the scenario instructions.

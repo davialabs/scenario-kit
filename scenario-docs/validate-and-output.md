@@ -34,14 +34,15 @@ At a minimum, the program must verify:
 11. the `cell_id` values in `cell_values` form exactly the same set as the
     source cells, with no duplicates or omissions;
 12. every cell has a resolved value for the primary identity;
-13. every entity and landmark references an existing source cell by the exact
-    `cell_id` field from its JSON line; no identifier was inferred from a slug
-    suffix, name, list position, `center`, or `bbox`;
+13. every entity provides coordinates when a precise position is available;
+    otherwise it provides an existing source `cell_id` copied from the exact
+    field rather than inferred from a slug suffix, name, list position,
+    `center`, or `bbox`; every landmark omits `cell_id`;
 14. every landmark has a distinct, deliberate `[longitude, latitude]` pair;
     known real places use their actual geographic positions rather than cell
     centers or `bbox` centers, while fictional places use deliberate points
     consistent with the scenario; every supplied entity or landmark coordinate
-    falls within its specified cell when source geometry is available;
+    falls within the story board when source geometry is available;
 15. every entity with a knowable or deliberately authored starting position has
     coordinates appropriate to its situation at `start_date`; people, armies,
     fleets, governments, and groups were not bulk-placed at generic cell points;

@@ -42,7 +42,7 @@ The six root keys are required and are the only ones allowed:
     {
       "name": "<text>",
       "description": "<text>",
-      "cell_id": 123,
+      "coordinates": [-43.1729, -22.9068],
       "is_featured": true,
       "stat_defs": {},
       "assets": { "mapAssetKey": "entity:person" }
@@ -51,7 +51,6 @@ The six root keys are required and are the only ones allowed:
   "landmarks": [
     {
       "name": "<text>",
-      "cell_id": 123,
       "coordinates": [-43.1729, -22.9068],
       "stat_defs": {},
       "assets": { "mapAssetKey": "poi:settlement" }
@@ -60,7 +59,7 @@ The six root keys are required and are the only ones allowed:
 }
 ```
 
-Replace every placeholder with scenario data and source `cell_id` values. Keep
+Replace every placeholder with scenario data. Keep
 every key exactly as written. Do not invent aliases: `value` or `stats` never
 replaces `stat_defs`, and a landmark never accepts `description`. The result is
 the JSON object itself, not a document that describes it; root keys such as
@@ -78,7 +77,7 @@ The importer distinguishes two outcomes:
 - a **blocking error** means that the file cannot be imported safely. This
   includes a malformed contract, an impossible date, an unknown cell, an
   invalid statistic reference, an invalid map asset, or coordinates outside
-  their cell;
+  the story board;
 - a **warning** means that the scenario remains importable, but useful optional
   information is missing. Davia shows the warning and asks the person importing
   the file to confirm before continuing.
@@ -210,7 +209,6 @@ allowed.
 {
   "name": "Deodoro da Fonseca",
   "description": "An influential marshal in Rio de Janeiro, ill and torn between his personal loyalty to the emperor and pressure from republican officers.",
-  "cell_id": 41,
   "coordinates": [-43.1729, -22.9068],
   "is_featured": true,
   "stat_defs": {
@@ -223,28 +221,27 @@ allowed.
 }
 ```
 
-For a complete result, provide `name`, `description`, `cell_id`, `is_featured`,
-`stat_defs`, and `assets.mapAssetKey`. Only `name` and `cell_id` are technically
-required for import. Missing optional values use safe defaults and may produce
-a warning, notably when no entity is featured or an asset has to be selected
-automatically. At least one entity is required. An entity `name` is 1 to 200
+For a complete result, provide `name`, `description`, `is_featured`,
+`stat_defs`, `assets.mapAssetKey`, and either `coordinates` or `cell_id`.
+Coordinates are the preferred placement input. Missing optional values use safe
+defaults and may produce a warning, notably when no entity is featured or an
+asset has to be selected automatically. At least one entity is required. An entity `name` is 1 to 200
 characters, its `description` is at most 500 characters, and
 `assets.mapAssetKey` is 1 to 200 characters.
 
-`coordinates` is optional. When absent, the importer chooses a valid point in
-the cell. For a complete one-shot result, include it whenever the entity's
-starting position is knowable or can be authored deliberately. When present,
-the order is `[longitude, latitude]`, and the point must belong to the specified
-cell. Copy `cell_id` from the exact source field; never infer it from a numeric
-slug suffix. For example, `{"cell_id":118,"slug":"germany-124"}` means
-`cell_id` is `118`.
+When the entity's starting position is knowable or can be authored deliberately,
+provide `[longitude, latitude]` coordinates and omit `cell_id`; Davia derives
+the containing cell. If no precise position can be justified, omit
+`coordinates` and provide `cell_id` as a fallback. Copy that fallback from the
+exact source field; never infer it from a numeric slug suffix. For example,
+`{"cell_id":118,"slug":"germany-124"}` means the fallback is `118`. If both
+fields are present, coordinates are authoritative.
 
 ## `landmarks`
 
 ```json
 {
   "name": "Rio de Janeiro",
-  "cell_id": 41,
   "coordinates": [-43.1729, -22.9068],
   "stat_defs": {
     "urban_control": "contested"
@@ -255,15 +252,13 @@ slug suffix. For example, `{"cell_id":118,"slug":"germany-124"}` means
 }
 ```
 
-For a complete result, provide `name`, `cell_id`, `stat_defs`, and
-`assets.mapAssetKey`, plus `coordinates` for every landmark. Use the actual
+For a complete result, provide `name`, `coordinates`, `stat_defs`, and
+`assets.mapAssetKey`. Use the actual
 position of a known real place, never the supplied cell `center`, an arbitrary
 point, or the center of its `bbox`. For an invented place, choose one deliberate
-scenario-consistent point that fits its validated location; historical realism
-is not required. The pair is always
-`[longitude, latitude]`, and the point must belong to its declared `cell_id`.
-Copy that identifier from the exact source `cell_id` field, never from the
-cell's slug, name, list position, `center`, or `bbox`.
+scenario-consistent point on the map; historical realism is not required. The
+pair is always `[longitude, latitude]`. Omit `cell_id`; Davia derives the
+containing cell from the point.
 
 A landmark `name` is 1 to 200 characters and `assets.mapAssetKey` is 1 to 200
 characters.
@@ -301,9 +296,9 @@ points, and calculates technical data without a second AI pass.
 
 ## Minimal complete example
 
-This example shows the structure of a complete final result. The `cell_id`
-values are assumed to come from the provided map; they are not created by the
-AI.
+This example shows the structure of a complete final result. Cell IDs in
+`cell_values` and entity fallbacks come from the provided map. Davia derives
+the cell for every supplied coordinate.
 
 ```json
 {
@@ -423,7 +418,6 @@ AI.
     {
       "name": "Deodoro da Fonseca",
       "description": "An influential marshal in Rio de Janeiro, ill and torn between his personal loyalty to the emperor and pressure from republican officers.",
-      "cell_id": 41,
       "coordinates": [-43.1729, -22.9068],
       "is_featured": true,
       "stat_defs": {
@@ -449,7 +443,6 @@ AI.
   "landmarks": [
     {
       "name": "Rio de Janeiro",
-      "cell_id": 41,
       "coordinates": [-43.1729, -22.9068],
       "stat_defs": {
         "urban_control": "uncertain"
@@ -460,7 +453,6 @@ AI.
     },
     {
       "name": "Buenos Aires",
-      "cell_id": 42,
       "coordinates": [-58.3816, -34.6037],
       "stat_defs": {
         "urban_control": "secured"

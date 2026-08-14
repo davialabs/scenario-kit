@@ -35,14 +35,15 @@ cell. The board gives the current scenario name and map metadata. Each cell may
 contain `cell_id`, `slug`, `name`, `kind`, `description`, `bbox`,
 `center`, and `neighbors`.
 
-Use all of this as read-only context. Build a lookup from the exact `cell_id`
-field on each JSON line before assigning any feature. The `cell_id` is never a
+Use all of this as read-only context. Coordinates are the preferred placement
+input. Davia derives the containing cell from every supplied position. Build a
+lookup from the exact `cell_id` field on each JSON line only for entities whose
+precise position is intentionally unknown. A fallback `cell_id` is never a
 number inferred from the cell's `slug`, name, order, `center`, or `bbox`. For
 example, if a source line contains `{"cell_id":118,"slug":"germany-124"}`,
-the only valid reference to that cell is `118`, never `124`.
+the only valid fallback is `118`, never `124`.
 
-In the final file, reference cells only with those exact source `cell_id`
-values. Never copy the board object, slugs, bounds, centers, neighbors, or cell
+Never copy the board object, slugs, bounds, centers, neighbors, or cell
 descriptions into the final file. Give every landmark its own
 `[longitude, latitude]` coordinates. For a known real place, use its actual
 geographic position. For a fictional place, choose a deliberate point
@@ -60,24 +61,25 @@ the file, inspect every landmark object. Each one must have exactly this shape:
 ```json
 {
   "name": "<landmark name>",
-  "cell_id": 123,
   "coordinates": [-43.1729, -22.9068],
   "stat_defs": {},
   "assets": { "mapAssetKey": "poi:settlement" }
 }
 ```
 
-`coordinates` is required for every landmark, without exception. Missing
-coordinates is a blocking error, not a warning. There is no cell-center
-fallback in the final-file contract. Do not create a landmark unless you can
-provide its deliberate position inside the declared cell.
+`coordinates` is required for every landmark, without exception. Omit
+`cell_id`; Davia derives it from the point. Missing coordinates is a blocking
+error, not a warning. There is no cell-center fallback in the final-file
+contract. Do not create a landmark unless you can provide its deliberate
+position on the map.
 
-Before delivery, compare every entity and landmark against the source cell
-lookup. Copy `cell_id` from the exact field, never from a numeric slug suffix.
 When an entity has a knowable or deliberately authored starting point, include
-its own coordinates too. People use their actual location at `start_date`;
-armies, fleets, and groups use their headquarters, base, or concentration
-point. Do not leave an entire entity list at generic cell positions.
+its coordinates and omit `cell_id`. People use their actual location at
+`start_date`; armies, fleets, and groups use their headquarters, base, or
+concentration point. Only when no precise position can be justified, omit
+`coordinates` and provide the exact source `cell_id` as a fallback. If both
+fields are present, coordinates are authoritative. Do not leave an entire
+entity list at generic cell positions.
 
 Run a map-wide coverage pass for landmarks. Spread meaningful places across
 the inhabited and scenario-relevant extent before adding extra density to the

@@ -11,7 +11,6 @@ the provided map.
 Each entry in `landmarks` contains only:
 
 - `name`;
-- `cell_id`, copied from the existing map;
 - `coordinates` in `[longitude, latitude]` format;
 - `stat_defs`;
 - `assets.mapAssetKey`, assigned later.
@@ -19,10 +18,8 @@ Each entry in `landmarks` contains only:
 The current product does not consume landmark descriptions. Do not add one,
 even if older seeds store an unused description in `assets`.
 
-Copy `cell_id` only from the exact `cell_id` field of the source-cell line that
-contains the landmark. Never infer it from a slug suffix, name, position in the
-cell list, `center`, or `bbox`. If the source says
-`{"cell_id":118,"slug":"germany-124"}`, use `118`, never `124`.
+Do not provide `cell_id`. Davia derives the containing cell from the landmark's
+coordinates.
 
 ## Scale
 
@@ -68,7 +65,7 @@ is not an intentional consequence of the scenario.
 
 ## Position
 
-Every landmark must belong to an existing cell and lie on the map. Always
+Every landmark must lie on the map. Always
 provide coordinates. A landmark is a point, so its position is part of the
 landmark rather than optional decoration.
 
@@ -79,8 +76,8 @@ and Metz require three different real positions even when the map represents
 all three with the same Germany cell.
 
 For an invented place, choose one deliberate point consistent with the
-validated scenario and its cell. Before delivery, check that every coordinate
-pair is ordered `[longitude, latitude]`, stays within world bounds, and belongs
-to the exact declared source `cell_id`. Distinct landmarks must not share a
-coordinate pair. If a coordinate is missing or was copied from a cell center,
-the final file is not complete: correct it before delivery.
+validated scenario and the map. Before delivery, check that every coordinate
+pair is ordered `[longitude, latitude]` and stays within world bounds. Davia
+derives the containing cell. Distinct landmarks must not share a coordinate
+pair. If a coordinate is missing or was copied from a cell center, the final
+file is not complete: correct it before delivery.
