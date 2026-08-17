@@ -59,6 +59,16 @@ geometry only as read-only input when necessary.
 If a check fails, correct the working object and rerun every check. Never show
 partial or invalid JSON.
 
+When correcting a file after an import attempt, require the original complete
+board context alongside the reported issues. Preserve the validated scenario
+and the current file; do not regenerate from a generic skeleton. Never copy a
+template coordinate such as `[0, 0]`, guess replacement coordinates, or fill
+missing cells from their numeric IDs. A missing-cell warning may be accepted
+unchanged when the applicable statistic defaults already express the intended
+state. After any repair, rerun this entire checklist because schema validation
+may reveal additional independent issues only after an earlier malformed field
+is corrected.
+
 ## Spatial coverage checks
 
 Use the landmark coordinates to review the whole map, not only the core action.

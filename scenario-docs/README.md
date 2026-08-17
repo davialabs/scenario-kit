@@ -88,6 +88,35 @@ because another region contains most of the action. Do not fill gaps with
 arbitrary points: use important cities, ports, hubs, chokepoints, or deliberate
 fictional places that belong in the scenario.
 
+## Repair a rejected or paused import
+
+When the user returns validation errors or warnings, keep the validated
+scenario and repair the current final file. Do not restart brainstorming and do
+not replace the file with a generic example.
+
+The correction request must include the original creation instructions and the
+complete board context. An error list by itself is not enough to reconstruct
+cell IDs or verify coordinates. Rebuild the exact source-cell lookup from that
+context before changing `cell_values`, entity fallbacks, or feature positions.
+
+Never copy coordinates, cell IDs, names, or values from a contract example or
+repair template. In particular, `[0, 0]` is not a neutral placeholder: it is a
+real geographic position and is invalid unless the authored feature genuinely
+belongs there and the point lies inside the current board. Never replace an
+invalid position by trying arbitrary pairs such as `[1, 1]`, `[2, 2]`, or
+`[5, 5]`.
+
+Warnings that say omitted cells will use defaults do not require invented
+explicit values. If those defaults express the validated scenario exactly,
+keep the file unchanged and tell the user it can be imported with the warning.
+Otherwise, use the complete board context to add only the deliberate values
+that differ from the defaults. Never generate terrain, ownership, or another
+cell state from the numeric `cell_id`, array order, or an arbitrary formula.
+
+After a correction, rerun every mechanical and editorial check, not only the
+check named by the latest error. Return one complete final file without
+ellipsis, placeholder prose, or truncated collections.
+
 Hard collection limits: at most 30 `story_stats`, between 1 and 100 `entities`,
 and between 0 and 100 `landmarks`. Across `story_stats`, no more than 10
 definitions may apply to `playthrough`, 3 to `cell`, 10 to `entity`, and 4 to
