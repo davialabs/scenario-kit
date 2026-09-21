@@ -45,7 +45,7 @@ The six root keys are required and are the only ones allowed:
       "coordinates": [-43.1729, -22.9068],
       "is_featured": true,
       "stat_defs": {},
-      "assets": { "mapAssetKey": "entity:person" }
+      "mapAsset": { "key": "entity:person" }
     }
   ],
   "landmarks": [
@@ -53,7 +53,7 @@ The six root keys are required and are the only ones allowed:
       "name": "<text>",
       "coordinates": [-43.1729, -22.9068],
       "stat_defs": {},
-      "assets": { "mapAssetKey": "poi:settlement" }
+      "mapAsset": { "key": "poi:settlement" }
     }
   ]
 }
@@ -215,19 +215,30 @@ allowed.
     "political_influence": "high",
     "health": "fragile"
   },
-  "assets": {
-    "mapAssetKey": "entity:military-commander"
+  "mapAsset": {
+    "key": "entity:military-commander"
   }
 }
 ```
 
 For a complete result, provide `name`, `description`, `is_featured`,
-`stat_defs`, `assets.mapAssetKey`, and either `coordinates` or `cell_id`.
+`stat_defs`, one asset selection, and either `coordinates` or `cell_id`. An
+asset selection always uses the `mapAsset` form shown below.
+
+```json
+"mapAsset": {
+  "key": "entity:samurai",
+  "parameters": { "variant": "b", "palette": "blue" }
+}
+```
+
+For `mapAsset`, copy the exact key and choose only parameter names and values
+listed for that key in the catalog. Omit `parameters` when all defaults fit.
 Coordinates are the preferred placement input. Missing optional values use safe
 defaults and may produce a warning, notably when no entity is featured or an
 asset has to be selected automatically. At least one entity is required. An entity `name` is 1 to 200
 characters, its `description` is at most 500 characters, and
-`assets.mapAssetKey` is 1 to 200 characters.
+an asset key is 1 to 200 characters.
 
 When the entity's starting position is knowable or can be authored deliberately,
 provide `[longitude, latitude]` coordinates and omit `cell_id`; Davia derives
@@ -246,22 +257,23 @@ fields are present, coordinates are authoritative.
   "stat_defs": {
     "urban_control": "contested"
   },
-  "assets": {
-    "mapAssetKey": "poi:capital"
+  "mapAsset": {
+    "key": "poi:capital"
   }
 }
 ```
 
-For a complete result, provide `name`, `coordinates`, `stat_defs`, and
-`assets.mapAssetKey`. Use the actual
+For a complete result, provide `name`, `coordinates`, `stat_defs`, and one asset
+selection using `mapAsset`. Use the actual
 position of a known real place, never the supplied cell `center`, an arbitrary
 point, or the center of its `bbox`. For an invented place, choose one deliberate
 scenario-consistent point on the map; historical realism is not required. The
 pair is always `[longitude, latitude]`. Omit `cell_id`; Davia derives the
 containing cell from the point.
 
-A landmark `name` is 1 to 200 characters and `assets.mapAssetKey` is 1 to 200
-characters.
+A landmark `name` is 1 to 200 characters and its asset key is 1 to 200
+characters. `mapAsset` parameters must use only names and values listed for
+that key in the catalog.
 
 `coordinates` is required for every landmark. If even one landmark omits it,
 the file is invalid and Davia rejects the import. This is a blocking error,
@@ -423,8 +435,8 @@ the cell for every supplied coordinate.
       "stat_defs": {
         "political_influence": "high"
       },
-      "assets": {
-        "mapAssetKey": "entity:military-commander"
+      "mapAsset": {
+        "key": "entity:military-commander"
       }
     },
     {
@@ -435,8 +447,8 @@ the cell for every supplied coordinate.
       "stat_defs": {
         "political_influence": "high"
       },
-      "assets": {
-        "mapAssetKey": "entity:head-of-state"
+      "mapAsset": {
+        "key": "entity:head-of-state"
       }
     }
   ],
@@ -447,8 +459,8 @@ the cell for every supplied coordinate.
       "stat_defs": {
         "urban_control": "uncertain"
       },
-      "assets": {
-        "mapAssetKey": "poi:capital"
+      "mapAsset": {
+        "key": "poi:capital"
       }
     },
     {
@@ -457,8 +469,8 @@ the cell for every supplied coordinate.
       "stat_defs": {
         "urban_control": "secured"
       },
-      "assets": {
-        "mapAssetKey": "poi:city"
+      "mapAsset": {
+        "key": "poi:city"
       }
     }
   ]

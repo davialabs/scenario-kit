@@ -13,7 +13,7 @@ Each entry in `landmarks` contains only:
 - `name`;
 - `coordinates` in `[longitude, latitude]` format;
 - `stat_defs`;
-- `assets.mapAssetKey`, assigned later.
+- `mapAsset`, assigned later.
 
 The current product does not consume landmark descriptions. Do not add one,
 even if older seeds store an unused description in `assets`.

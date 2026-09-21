@@ -15,7 +15,7 @@ Each entry in `entities` contains:
 - `cell_id`: a fallback existing cell used only without coordinates;
 - `is_featured`: prominence in the interface, with no effect on playability;
 - `stat_defs`: applicable initial values;
-- `assets.mapAssetKey`: the exact key assigned during the asset step.
+- `mapAsset`, exactly as assigned during the asset step.
 
 Do not add any other field.
 

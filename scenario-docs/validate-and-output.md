@@ -48,7 +48,9 @@ At a minimum, the program must verify:
     fleets, governments, and groups were not bulk-placed at generic cell points;
 16. entity names are unique, and landmark names are unique within their own
     list;
-17. every `mapAssetKey` exists in the catalog and has the correct prefix;
+17. every feature uses `mapAsset`; every key exists in the current generated
+    catalog and has the correct prefix; every parameter name and value is
+    listed for that key;
 18. at least one entity is marked `is_featured`;
 19. no geometry, UUID, `bbox`, `map_id`, slug, cover, visual direction, or
     calculated data is present.
@@ -58,16 +60,6 @@ geometry only as read-only input when necessary.
 
 If a check fails, correct the working object and rerun every check. Never show
 partial or invalid JSON.
-
-When correcting a file after an import attempt, require the original complete
-board context alongside the reported issues. Preserve the validated scenario
-and the current file; do not regenerate from a generic skeleton. Never copy a
-template coordinate such as `[0, 0]`, guess replacement coordinates, or fill
-missing cells from their numeric IDs. A missing-cell warning may be accepted
-unchanged when the applicable statistic defaults already express the intended
-state. After any repair, rerun this entire checklist because schema validation
-may reveal additional independent issues only after an earlier malformed field
-is corrected.
 
 ## Spatial coverage checks
 
