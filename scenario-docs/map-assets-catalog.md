@@ -11,8 +11,22 @@ This URL is stable. The asset publication pipeline regenerates its JSON
 automatically whenever the current listed assets change. Do not maintain a
 second static list of asset keys in the Scenario Kit.
 
-Read that JSON file in full before assigning assets. It contains both GLB assets
-and code assets. Every entry uses the same final-file shape:
+Read that JSON file in full before assigning assets. Each catalog entry contains
+only the fields needed to choose a valid asset:
+
+```json
+{
+  "key": "entity:samurai",
+  "description": "Map asset representing a samurai.",
+  "defaultParameters": { "variant": "a", "palette": "earth" },
+  "parameters": {
+    "variant": { "a": "...", "b": "...", "c": "..." },
+    "palette": { "earth": "...", "blue": "..." }
+  }
+}
+```
+
+Write the selected asset in the final file with this shape:
 
 ```json
 "mapAsset": {
@@ -23,8 +37,6 @@ and code assets. Every entry uses the same final-file shape:
 
 Choose only a listed `key`. The key prefix must match the feature type:
 `entity:*` for entities and `poi:*` for landmarks.
-`sourceType` indicates whether Davia renders that entry from a `glb` or `code`
-source; it does not change the final-file shape.
 
 `parameters` contains the closed set of configurable values for that asset.
 Choose only names and values listed under the entry's `parameters` object. Omit
