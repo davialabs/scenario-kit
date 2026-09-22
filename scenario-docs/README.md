@@ -117,7 +117,7 @@ After the user explicitly validates the brainstorming, tell them:
 
 > The scenario is validated. I will now prepare the final file.
 
-Then read the following pages in full, in this exact order:
+Then read the following resources in full, in this exact order:
 
 1. [Final JSON contract](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/json-contract.md)
 2. [Populate `story`](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-story.md)
@@ -126,10 +126,11 @@ Then read the following pages in full, in this exact order:
 5. [Populate landmarks](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-landmarks.md)
 6. [Populate values for the existing map](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-map.md)
 7. [Assign map assets](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/populate-map-assets.md)
-8. [Map asset catalog](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/map-assets-catalog.md)
-9. [Validate and produce the final JSON](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/validate-and-output.md)
+8. [Map asset catalog rules](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/map-assets-catalog.md)
+9. [Current generated map asset catalog (JSON)](https://cdn.davia.ai/tale/map-assets/catalog.json)
+10. [Validate and produce the final JSON](https://raw.githubusercontent.com/davialabs/scenario-kit/main/scenario-docs/validate-and-output.md)
 
-Populate a single JSON object in memory according to these pages. Do not show
+Populate a single JSON object in memory according to these resources. Do not show
 any fragment, draft, or intermediate document. After completing the mechanical
 validation required by the last page, give the user one downloadable `.json`
 file. Only when attachments are unavailable may you provide one complete JSON

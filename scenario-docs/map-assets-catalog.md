@@ -7,6 +7,10 @@ The authoritative catalog is generated from Davia's current, listed asset rows:
 
 [`https://cdn.davia.ai/tale/map-assets/catalog.json`](https://cdn.davia.ai/tale/map-assets/catalog.json)
 
+This URL is stable. The asset publication pipeline regenerates its JSON
+automatically whenever the current listed assets change. Do not maintain a
+second static list of asset keys in the Scenario Kit.
+
 Read that JSON file in full before assigning assets. It contains both GLB assets
 and code assets. Every entry uses the same final-file shape:
 
